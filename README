@@ -1,0 +1,1 @@
+This is an example of a simple parallel sorting algorthim in C++. It uses the OpenMP standard compiler library for parallelization.
