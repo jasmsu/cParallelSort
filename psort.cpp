@@ -10,13 +10,14 @@ void ParallelSort::psort(vector<T>* array)
 {
     int size = array->size();
     int threads;
-	//If size is one, already sorted.
+    
+    //If size is one, already sorted.
     if(size < 2)
         return;
 
-	//If size is less than 5000, use serial quicksort
-	//to avoid overhead.
-	if(size <= 5000)
+    //If size is less than 5000, use serial quicksort
+    //to avoid overhead.
+    if(size <= 5000)
     {
         quickSortSerial(array, 0, size - 1);
     }
@@ -42,8 +43,8 @@ void ParallelSort::quickSort(vector<T> * array, int start, int end)
     int i = start, j = end, middle = (start + end)/2;
     T temp;
 	
-	//Select median of three for pivot to avoid 
-	//worst case pivot.
+    //Select median of three for pivot to avoid 
+    //worst case pivot.
     if((*array)[start] > (*array)[middle])
     {
         temp = (*array)[start];
@@ -65,7 +66,7 @@ void ParallelSort::quickSort(vector<T> * array, int start, int end)
 
     T pivot = (*array)[middle];
     
-	//Organize sections
+    //Organize sections
     while(i <= j)
     {
         while((*array)[i] < pivot)
@@ -83,25 +84,25 @@ void ParallelSort::quickSort(vector<T> * array, int start, int end)
         }
     }
 	
-	//Parallelization of first section using omp task
+    //Parallelization of first section using omp task
     #pragma omp task
     if(start < j)
     {	
-		//If remaining sections are less than 10000, use serial
-		//quicksort to avoid overhead.
-		if(j - start < 10000)
+	//If remaining sections are less than 10000, use serial
+	//quicksort to avoid overhead.
+	if(j - start < 10000)
             quickSortSerial(array, start, j);
         else
             quickSort(array, start, j);
     }
 	
-	//Parallelization of second section using omp task
+    //Parallelization of second section using omp task
     #pragma omp task
     if(i < end)
     {
-		//If remaining sections are less than 10000, use serial
-		//quicksort to avoid overhead.
-		if(end - i < 10000)
+	//If remaining sections are less than 10000, use serial
+	//quicksort to avoid overhead.
+	if(end - i < 10000)
             quickSortSerial(array, i, end);
         else
             quickSort(array, i, end);
@@ -121,8 +122,8 @@ void ParallelSort::quickSortSection(vector<T> * array, int start, int end)
     int i = start, j = end, middle = (start + end)/2;
     T temp;
     
-	//Select median of three for pivot to avoid 
-	//worst case pivot.
+    //Select median of three for pivot to avoid 
+    //worst case pivot.
     if((*array)[start] > (*array)[middle])
     {
         temp = (*array)[start];
@@ -144,7 +145,7 @@ void ParallelSort::quickSortSection(vector<T> * array, int start, int end)
 
     T pivot = (*array)[middle];
     
-	//Organize sections
+    //Organize sections
     while(i <= j)
     {
         while((*array)[i] < pivot)
@@ -163,7 +164,7 @@ void ParallelSort::quickSortSection(vector<T> * array, int start, int end)
         }
     }
 	
-	//Parallelization of two section using omp sections
+    //Parallelization of two section using omp sections
     int size;
     #pragma omp parallel sections if(end - start > sortSize) num_threads(2)
     {
@@ -201,8 +202,8 @@ void ParallelSort::quickSortSerial(vector<T> * array, int start, int end)
     int i = start, j = end, middle = (start + end)/2;
     T temp;
 	
-	//Select median of three for pivot to avoid 
-	//worst case pivot.
+    //Select median of three for pivot to avoid 
+    //worst case pivot.
     if((*array)[start] > (*array)[middle])
     {
         temp = (*array)[start];
@@ -223,7 +224,7 @@ void ParallelSort::quickSortSerial(vector<T> * array, int start, int end)
     }
     T pivot = (*array)[middle];
     
-	//Organize sections
+    //Organize sections
     while(i <= j)
     {
         while((*array)[i] < pivot)
@@ -242,12 +243,12 @@ void ParallelSort::quickSortSerial(vector<T> * array, int start, int end)
         }
     }
 	
-	//Sort first section.
+    //Sort first section.
     if(start < j)
     {    
         quickSortSerial(array, start, j);
     }
-	//Sort second section.
+    //Sort second section.
     if(i < end)
     {
         quickSortSerial(array, i, end);
